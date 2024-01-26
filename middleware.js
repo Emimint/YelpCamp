@@ -1,5 +1,6 @@
 const ExpressError = require( "./utils/ExpressError" );
 const CampGround = require( "./models/campground" );
+const Review = require( "./models/review" );
 const {campgroundSchema, reviewSchema} = require( './schemas' );
 
 module.exports.storeReturnTo = (req, res, next) => {
@@ -49,4 +50,15 @@ module.exports.validateReview = ( req, res, next ) => {
   } else {
     next();
   }
+}
+
+
+module.exports.isReviewAuthor = async ( req, res, next ) => {
+  const {id, reviewId} = req.params;
+  const review = await Review.findById(reviewId);
+  if(!review.author.equals(req.user._id)) {
+      req.flash('error', 'You do not have permission to edit this review!');
+      return res.redirect(`/campgrounds/${campground.id}`);
+  } 
+  next();
 }
