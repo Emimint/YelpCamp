@@ -1,4 +1,5 @@
 <% layout('layouts/boilerplate')%>
+<link rel="stylesheet" href="/css/images.css" class="rel" />
 <div class="row">
   <h1 class="text-center">New Campground</h1>
   <div class="col-6 offset-3">
@@ -33,18 +34,24 @@
         <div class="valid-feedback">Looks good!</div>
         <div class="invalid-feedback">You must specify a location.</div>
       </div>
-      <input type="file" name="campground-image" id="" multiple />
-      <!-- <div class="mb-3">
-        <label class="form-label" for="image">Image Url</label>
-        <input
-          class="form-control"
-          type="text"
-          id="image"
-          name="campground[image]"
-          required
-        />
-        <div class="valid-feedback">Looks good!</div>
-      </div> -->
+      <div class="mb-3">
+        <label class="form-label">Choose image(s)...</label>
+        <div class="form-file custom-file">
+          <input
+            class="form-control custom-file-input"
+            type="file"
+            id="campground-image"
+            name="campground-image"
+            multiple
+            onchange="previewMultiple(event)"
+          />
+          <label
+            for="campground-image"
+            class="form-label custom-file-label"
+          ></label>
+        </div>
+        <div id="formFile"></div>
+      </div>
       <div class="mb-3">
         <label class="form-label" for="price">Campground Price</label>
         <div class="input-group">
