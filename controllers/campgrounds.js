@@ -1,3 +1,4 @@
+const axios = require("axios");
 const CampGround = require("../models/campground");
 const { cloudinary } = require("../cloudinary");
 
@@ -11,14 +12,20 @@ module.exports.renderNewForm = (req, res) => {
 };
 
 module.exports.createCampground = async (req, res, next) => {
+  const locationCords = await axios.get(
+    `https://api.geoapify.com/v1/geocode/search?text=${req.body.campground.location}&apiKey=${process.env.GEO_API_KEY}`
+  );
+  const {
+    features: [{ geometry }],
+  } = locationCords.data;
   const campground = new CampGround(req.body.campground);
   campground.images = req.files.map((file) => ({
     url: file.path,
     filename: file.filename,
   }));
   campground.author = req.user._id;
+  campground.geometry = geometry;
   await campground.save();
-  console.log(campground);
   req.flash("success", "Successfully made a new campground!");
   res.redirect(`/campgrounds/${campground._id}`);
 };
@@ -51,6 +58,12 @@ module.exports.renderEditCampground = async (req, res) => {
 };
 
 module.exports.updateCampground = async (req, res) => {
+  const locationCords = await axios.get(
+    `https://api.geoapify.com/v1/geocode/search?text=${req.body.campground.location}&apiKey=${process.env.GEO_API_KEY}`
+  );
+  const {
+    features: [{ geometry }],
+  } = locationCords.data;
   const campground = await CampGround.findByIdAndUpdate(
     req.params.id,
     req.body.campground
@@ -60,6 +73,7 @@ module.exports.updateCampground = async (req, res) => {
     filename: file.filename,
   }));
   campground.images.push(...images);
+  campground.geometry = geometry;
   await campground.save();
   if (req.body.deleteImages) {
     for (let file of req.body.deleteImages) {
