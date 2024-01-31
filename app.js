@@ -5,6 +5,7 @@ if (process.env.NODE_ENV !== "production") {
 const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
+const mongoSanitize = require("express-mongo-sanitize");
 const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
@@ -12,6 +13,7 @@ const ExpressError = require("./utils/ExpressError");
 const methodOverride = require("method-override");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+const helmet = require("helmet");
 const User = require("./models/user");
 
 const campgrounds = require("./routes/campgrounds");
@@ -42,8 +44,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
+app.use(mongoSanitize());
 
 const sessionConfig = {
+  name: "yelpcamp_session",
   secret: "thisshouldbeabettersecret!",
   resave: false,
   saveUninitialized: true,
@@ -54,8 +58,56 @@ const sessionConfig = {
   },
 };
 
+const scriptSrcUrls = [
+  "https://stackpath.bootstrapcdn.com/",
+  "https://kit.fontawesome.com/",
+  "https://cdnjs.cloudflare.com/",
+  "https://cdn.jsdelivr.net/",
+  "https://res.cloudinary.com",
+  "https://unpkg.com/",
+];
+const styleSrcUrls = [
+  "https://kit-free.fontawesome.com/",
+  "https://stackpath.bootstrapcdn.com/",
+  "https://fonts.googleapis.com/",
+  "https://use.fontawesome.com/",
+  "https://cdn.jsdelivr.net/",
+  "https://res.cloudinary.com",
+  "https://unpkg.com/",
+];
+const connectSrcUrls = ["https://res.cloudinary.com", "https://unpkg.com/"];
+
+const fontSrcUrls = ["https://res.cloudinary.com"];
+
 app.use(session(sessionConfig));
 app.use(flash());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: [],
+      connectSrc: ["'self'", ...connectSrcUrls],
+      scriptSrc: ["'unsafe-inline'", "'self'", ...scriptSrcUrls],
+      styleSrc: ["'self'", "'unsafe-inline'", ...styleSrcUrls],
+      workerSrc: ["'self'", "blob:"],
+      objectSrc: [],
+      imgSrc: [
+        "'self'",
+        "blob:",
+        "data:",
+        "https://res.cloudinary.com/dtfm3y3sq/", //SHOULD MATCH YOUR CLOUDINARY ACCOUNT!
+        "https://images.unsplash.com/",
+        "https://unpkg.com/",
+        "https://*.tile.openstreetmap.org/",
+        "https://*.tile.osm.org/",
+        "http://*.tile.osm.org/",
+      ],
+      fontSrc: ["'self'", ...fontSrcUrls],
+      mediaSrc: ["https://res.cloudinary.com/dtfm3y3sq/"],
+      childSrc: ["blob:"],
+    },
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());

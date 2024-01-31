@@ -8,9 +8,15 @@
     <div class="row">
       <div class="col-md-4">
         <% if (campground.images.length) { %>
-        <img class="img-fluid" alt="" src="<%=campground.images[0].url%>" />
+        <img
+          crossorigin="anonymous"
+          class="img-fluid"
+          alt=""
+          src="<%=campground.images[0].url%>"
+        />
         <% } else { %>
         <img
+          crossorigin="anonymous"
           class="img-fluid"
           alt=""
           src="https://www.threeriversparks.org/sites/default/files/2019-03/Baker%20campground.jpg"
