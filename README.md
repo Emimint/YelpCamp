@@ -18,7 +18,7 @@
 
 ### The project
 
-Yelp Camp is a full-stack campground location rental simulator made with JavaScript, Node, Express and MongoDB.
+Yelp Camp is a full-stack campground location rating simulator made with JavaScript, Node, Express and MongoDB.
 
 ### Technical Stack
 
@@ -69,7 +69,6 @@ On Render at [`https://moulicamp.onrender.com/`.](https://moulicamp.onrender.com
 
 - Improve UI (pagination, search bar, etc)
 - Add support for passport authentication using Google, Facebook, ...
-- Add payment support with [Stripe](https://stripe.com/docs/api)
 
 ## Acknowledgments
 
