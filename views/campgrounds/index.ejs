@@ -10,14 +10,14 @@
         <% if (campground.images.length) { %>
         <img
           crossorigin="anonymous"
-          class="img-fluid"
+          class="card-img-top"
           alt=""
           src="<%=campground.images[0].url%>"
         />
         <% } else { %>
         <img
           crossorigin="anonymous"
-          class="img-fluid"
+          class="card-img-top"
           alt=""
           src="https://www.threeriversparks.org/sites/default/files/2019-03/Baker%20campground.jpg"
         />
@@ -30,7 +30,7 @@
           <p class="card-text">
             <small class="text-muted"><%= campground.location%></small>
           </p>
-          <a class="btn btn-primary" href="/campgrounds/<%=campground._id%>"
+          <a class="btn btn-dark" href="/campgrounds/<%=campground._id%>"
             >View <%=campground.title%></a
           >
         </div>

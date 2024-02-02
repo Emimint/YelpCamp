@@ -20,7 +20,7 @@ const User = require("./models/user");
 const campgrounds = require("./routes/campgrounds");
 const reviews = require("./routes/reviews");
 const userRoutes = require("./routes/users");
-// const dbUrl = "mongodb://127.0.0.1:27017/yelp-camp";
+// const dbUrl = "mongodb://127.0.0.1:27017/yelp-camp"; // Un-comment as needed
 const dbUrl = process.env.DB_URL;
 
 mongoose
